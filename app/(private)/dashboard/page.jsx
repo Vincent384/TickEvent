@@ -1,14 +1,17 @@
 'use client'
 import { useBookEventContext } from '@/app/context/bookeventcontext'
 import { Button } from '@/components/ui/button'
+import { useToast } from '@/components/ui/use-toast'
 import { useUser } from '@clerk/nextjs'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 
 const Dashboard = () => {
   const [events, setEvents] = useState([])
-  const { unbookEvent } = useBookEventContext()
+  const { unbookEvent,toastMessage,setToastMessage } = useBookEventContext()
   const { user, isLoaded } = useUser()
+  const { toast } = useToast()
+ 
 
   useEffect(() => {
     if(!isLoaded) return
@@ -24,12 +27,24 @@ const Dashboard = () => {
         console.log(error.message)
       }
   }, [isLoaded])
+
+  useEffect(() => {
+    if (toastMessage) {
+      toast({
+        title: '',
+        description: toastMessage,
+      });
+      setToastMessage(null)
+    }
+  }, [toastMessage, toast, setToastMessage])
+
   
 console.log(events)
   const handleUnbookClick = async(eventId) =>{
      const success = await unbookEvent(user.primaryEmailAddress.emailAddress,eventId)
       if(success){
         setEvents((prevEvents)=> prevEvents.filter((event)=> event.id !== eventId))
+
       }
   }
 

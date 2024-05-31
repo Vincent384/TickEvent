@@ -1,4 +1,5 @@
 'use client'
+import { useToast } from "@/components/ui/use-toast";
 import { useUser } from "@clerk/nextjs"
 import { useRouter } from "next/navigation"
 import { createContext, useContext, useState } from "react"
@@ -10,6 +11,8 @@ const BookEventContextProvider = ({ children }) => {
 
   const router = useRouter()
   const { isLoaded, user } = useUser()
+  const { toast } = useToast()
+  const [toastMessage, setToastMessage] = useState(null)
 
   const bookEvent = async (id) => {
     try {
@@ -37,13 +40,17 @@ const BookEventContextProvider = ({ children }) => {
         console.error('failed to book')
         return 
       }
-      router.push('/dashboard')
+      
+        setToastMessage(data.message)
+      
     } catch (error) {
       console.log(error.message)
+      setToastMessage(error.message)
     }
   };
 
   const unbookEvent = async (email,eventId) =>{
+    setToastMessage('')
     try {
         const unbook = {
             email,
@@ -61,11 +68,12 @@ const BookEventContextProvider = ({ children }) => {
           }
         
           const data = await res.json()
-          console.log(data)
+          console.log(data.message)
 
         setbookedEvents((prevEvents)=> prevEvents.filter(event => 
             !(event.email === email && event.eventId === eventId)))  
-
+        setToastMessage(data.message)
+          
             return true
     } catch (error) {
         console.log(error.message)
@@ -75,7 +83,9 @@ const BookEventContextProvider = ({ children }) => {
 
   const value = {
     bookEvent,
-    unbookEvent
+    unbookEvent,
+    toastMessage,
+    setToastMessage
   }
 
   return (

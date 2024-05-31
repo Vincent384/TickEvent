@@ -4,6 +4,7 @@ import "./globals.css";
 import { Navbar } from "@/components/ui/Navbar";
 import { ClerkProvider } from "@clerk/nextjs";
 import BookEventContextProvider from "./context/bookeventcontext";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,7 +20,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
         <Navbar/>
-
+        <Toaster/>
         <BookEventContextProvider>
         {children}
         </BookEventContextProvider>

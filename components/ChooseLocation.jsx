@@ -8,10 +8,10 @@ import {
   } from "@/components/ui/select"
 
 export const ChooseLocation = ({city,handleCitySelection}) => {
-
   const [selectedCity, setSelectedCity] = useState('')
+  
+  const handleClickSelection = (value)=>{
 
-const handleClickSelection = (value)=>{
   setSelectedCity(value)
   handleCitySelection(value)
 }
@@ -20,7 +20,7 @@ const handleClickSelection = (value)=>{
     <div >      
     <Select value={selectedCity} onValueChange={handleClickSelection}>
     <SelectTrigger className="w-[180px]">
-      <SelectValue placeholder="City" />
+      <SelectValue placeholder="All Locations" />
     </SelectTrigger>
     <SelectContent>
  {

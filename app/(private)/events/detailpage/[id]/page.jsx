@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { useUser } from '@clerk/nextjs'
 import { useBookEventContext } from '@/app/context/bookeventcontext'
+import { useToast } from '@/components/ui/use-toast'
 
 const DetailsPage = () => {
   const { id } = useParams()
@@ -15,10 +16,11 @@ const DetailsPage = () => {
   const [attendees, setAttendees] = useState([])
   const [avaliableSeatsLeft, setAvaliableSeatsLeft] = useState(0)
   const { isLoaded,user} = useUser()
+  const [startDate, setStartDate] = useState(new Date())
 
-
-  const { bookEvent } = useBookEventContext()
-
+  
+  const { bookEvent,toastMessage,setToastMessage } = useBookEventContext()
+  const { toast } = useToast()
 
   useEffect(() => {
     if(!isLoaded) return
@@ -42,22 +44,35 @@ const DetailsPage = () => {
   const handleClickBooking = async () => {
     if (id) {
 
-      await bookEvent(id);
+     await bookEvent(id);
+  }}
+
+  useEffect(() => {
+    if (toastMessage) {
+      toast({
+        title: '',
+        description: toastMessage,
+      });
+      setToastMessage(null)
     }
+  }, [toastMessage, toast, setToastMessage])
+     
+  const isEventUpcoming = (eventDate,eventTime)=>{
+   return new Date(eventDate) < startDate && eventTime < startDate
   }
 
   return (
     <div className='border m-4 rounded'>
       {singleEvent ? (
         <div className='flex p-4'>
-          <div className=''>
+          <div className='size-[500px]'>
             <Image className='object-cover h-full w-full cursor-pointer '
             src={singleEvent.imageUrl}
             width={300}
             height={300}
             alt={singleEvent.imageName}/>
           </div>
-            <div className='p-7'>
+            <div className='px-7 flex-1'>
               <div className='flex items-center'>
                 <h1 className='text-4xl font-bold'>{singleEvent.title}</h1>
               </div>
@@ -65,6 +80,9 @@ const DetailsPage = () => {
                   <p>{singleEvent.description}</p>
                 </div>
                   <div className='flex justify-between mt-10 items-center'>
+                     { 
+                     isEventUpcoming(singleEvent.date,singleEvent.time) ? <Button>Passed Event</Button> :
+
                       <div>
                         {
                           avaliableSeatsLeft > 0 ?
@@ -77,6 +95,10 @@ const DetailsPage = () => {
                         )
                         }
                       </div>
+
+
+                     }
+                     
                       <div className='flex gap-4 text-lg'>
                         <p className=''>{singleEvent.time}</p>
                         <TimerIcon />
