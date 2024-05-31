@@ -1,6 +1,6 @@
 Välkommen till Evenemangswebbapplikationen!
 
-Vår evenemangswebbapplikation är en plattform som låter användare upptäcka, utforska och delta i olika evenemang på ett smidigt och användarvänligt sätt.
+TickEvent är en plattform som låter användare upptäcka, utforska och delta i olika evenemang på ett smidigt och användarvänligt sätt.
 Funktioner
 
 Autentisering: Användare kan registrera sig för ett konto och logga in för att få tillgång till webbplatsen. Vi använder samma autentiseringsmetod som bestämdes i gruppen för en enhetlig och säker inloggningsupplevelse.
